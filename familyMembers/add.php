@@ -43,6 +43,10 @@
             }
 
             mysqli_commit($conn);
+
+            // Redirect with success parameter
+            header("Location: add.php?success=1");
+            exit;
             
         } catch (Exception $e) {
             mysqli_rollback($conn);
@@ -50,12 +54,20 @@
         }
     }
 ?>
-
 <head>
     <title><?= $page_title ?></title>
     <link rel="stylesheet" type="text/css" href="../css/navbar.css">
     <link rel="stylesheet" type="text/css" href="../css/footer.css">
     <link rel="stylesheet" type="text/css" href="../css/forms.css">
+    <script>
+        // Check for success parameter and display alert
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('success')) {
+                alert('Family member added successfully!');
+            }
+        };
+    </script>
 </head>
 <body>
     <!-- Navbar Section -->
