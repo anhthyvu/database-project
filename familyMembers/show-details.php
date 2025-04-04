@@ -135,6 +135,7 @@
         <!-- Location Details -->
         <div class="list-container">
             <h2>Locations</h2>
+            <button class="add-location-btn add-btn" onclick="window.location.href='add-location.php'">Add New Location</button>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -163,6 +164,7 @@
         <!-- Secondary Family Member Details -->
         <div class="list-container">
             <h2>Secondary Family Member</h2>
+            <button class="add-secondary-btn add-btn" onclick="window.location.href='add-secondary.php'">Add Secondary Family Member</button>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -186,6 +188,7 @@
         <!-- Club Members Details -->
         <div class="list-container">
             <h2>Club Members</h2>
+            <button class="add-club-member-btn add-btn" onclick="window.location.href='add-club-member.php'">Add Club Member</button>
             <table class="data-table">
                 <thead>
                     <tr>
