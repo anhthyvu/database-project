@@ -1,3 +1,12 @@
+<?php
+    $page_title = "Family Member Details";
+
+    // Get the family member ID from the URL
+    $personID = isset($_GET['id']) ? $_GET['id'] : 0;
+    
+    // Todo: Implement the dynamic display for each section for the targeted member
+?>
+
 <head>
     <title><?= $page_title ?></title>
     <link rel="stylesheet" type="text/css" href="../css/navbar.css">
@@ -49,6 +58,7 @@
         <!-- Location Details -->
         <div class="list-container">
             <h2>Locations</h2>
+            <button class="add-location-btn add-btn" onclick="window.location.href='add-location.php'">Add New Location</button>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -62,6 +72,9 @@
                 </thead>
                 <tbody>
                     <!-- Displayed dynamically -->
+                    <!-- 
+                        //Todo: Implement the dynamic display for location 
+                    -->
                 </tbody>
             </table>
         </div>
@@ -69,6 +82,7 @@
         <!-- Secondary Family Member Details -->
         <div class="list-container">
             <h2>Secondary Family Member</h2>
+            <button class="add-secondary-btn add-btn" onclick="window.location.href='add-secondary.php'">Add Secondary Family Member</button>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -80,6 +94,9 @@
                 </thead>
                 <tbody>
                     <!-- Displayed dynamically -->
+                    <!-- 
+                        //Todo: Implement the dynamic display for secondary family member 
+                    -->
                 </tbody>
             </table>
         </div>
@@ -87,6 +104,7 @@
         <!-- Club Members Details -->
         <div class="list-container">
             <h2>Club Members</h2>
+            <button class="add-club-member-btn add-btn" onclick="window.location.href='add-club-member.php'">Add Club Member</button>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -107,6 +125,9 @@
                 </thead>
                 <tbody>
                     <!-- Displayed dynamically -->
+                    <!-- 
+                        //Todo: Implement the dynamic display for club members
+                    -->
                 </tbody>
             </table>
         </div>
