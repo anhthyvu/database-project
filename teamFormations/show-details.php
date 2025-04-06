@@ -146,7 +146,7 @@
                             <td><?= htmlspecialchars($player['PhoneNumber']) ?></td>
                             <td><?= htmlspecialchars($player['Email']) ?></td>
                             <td>
-                                <a href="edit.php?id=<?= $team['TeamID'] ?>" class="edit-btn">Edit</a> 
+                                <a href="edit-player.php?id=<?= $teamID?>&cmn=<?=$player['CMN'] ?>" class="edit-btn">Edit</a> 
                                 <a href="remove-player.php?id=<?= $teamID ?>&cmn=<?=$player['CMN']?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this player?')">Delete</a>
                             </td>
                         </tr>

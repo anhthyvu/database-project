@@ -1,35 +1,40 @@
 <?php
-    $page_title = "Add Player";
-    require_once '../database.php';
+    $page_title = "Delete Player";
+    require_once "../database.php";
 
-    //Get the team ID from the URL
+    // Get the team formation ID and CMN from the URL
     $teamID = isset($_GET['id']) ? $_GET['id'] : 0;
+    $cmn=isset($_GET['cmn']) ? $_GET['cmn'] : 0;
 
-    //Check if the team ID is valid
-    $query = "
+    //Check if the teamID and CMN is valid
+    $checkQuery = "
         SELECT * 
-        FROM Team 
-        WHERE TeamID = ?
+        FROM Role 
+        WHERE TeamID = ? AND CMN = ?
     ";
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, 'i', $teamID);
+    $stmt = mysqli_prepare($conn, $checkQuery);
+    mysqli_stmt_bind_param($stmt, "ii", $teamID, $cmn);
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
-    $team = mysqli_fetch_assoc($result);
+    $role = mysqli_fetch_assoc($result);
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         //Get values
-        $CMN = mysqli_real_escape_string($conn, $_POST['CMN']);
-        $Position = mysqli_real_escape_string($conn, $_POST['position']);
+        $CMN = mysqli_real_escape_string($conn, $_POST['cmn']);
+        $Position = mysqli_real_escape_string($conn, $_POST['Position']);
 
         mysqli_begin_transaction($conn);
 
         try {
-            $addQuery = "
-                INSERT INTO Role (CMN, TeamID, Position) VALUES (?, ?, ?);
+            $updateQuery = "
+                UPDATE Role Set
+                    CMN = ?,
+                    Position = ?
+                WHERE 
+                    TeamID = ? AND CMN = ?
             ";
-            $stmt = mysqli_prepare($conn, $addQuery);
-            mysqli_stmt_bind_param($stmt, 'sis', $CMN, $_GET['id'], $Position);
+            $stmt = mysqli_prepare($conn, $updateQuery);
+            mysqli_stmt_bind_param($stmt, 'isii', $CMN, $Position, $_GET['id'], $_GET['cmn']);
             
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Error executing query: " . mysqli_error($conn));
@@ -39,6 +44,7 @@
 
             // Redirect with success parameter
             header("Location: show-details.php?id=$teamID&success=1");
+
             exit;
             
         } catch (Exception $e) {
@@ -91,32 +97,32 @@
     <!-- Main Section -->
     <main>
         <div class="form-container">
-            <h1>Add Player</h1>
+            <h1>Edit Team</h1>
 
-            <!-- Confirming the addition -->
+            <!-- Confirming the update -->
             <?php if(isset($error)): ?>
                 <div class="error" style="color: red; font-weight: bold; margin-top: 20px;">Error: <?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <form action="add-player.php?id=<?= $teamID ?>" method="POST">
-                <label for="CMN">Club Member Number *:</label>
-                <input type="text" name="CMN" id="CMN" required
-                    value="<?= isset($_POST['CMN']) ? htmlspecialchars($_POST['CMN']) : '' ?>"
+            <<form action="edit-player.php?id=<?= $teamID ?>&cmn=<?= $cmn ?>" method="POST">
+                <label for="cmn">Club Membership Number *:</label>
+                <input type="text" name="cmn" id="cmn" required
+                    value="<?=  htmlspecialchars($role['CMN']) ?>"
                 >
                 <br>
-                <label for="position">Player Position *:</label>
-                    <select name="position" id="position" required>
-                        <option value="Outside Hitter">Outside Hitter</option>
-                        <option value="Opposite">Opposite</option>
-                        <option value="Setter">Setter</option>
-                        <option value="Middle Blocker">Middle Blocker</option>
-                        <option value="Libero">Libero</option>
-                        <option value="Defensive Specialist">Defensive Specialist</option>
-                        <option value="Serving Specialist">Serving Specialist</option>
-                    </select>
+                <label for="Position">Player Position *:</label>
+                <select name="Position" id="Position" required>
+                    <option value="Outside Hitter" <?= $role['Position'] === 'Outside Hitter' ? 'selected' : '' ?>>Outside Hitter</option>
+                    <option value="Opposite" <?= $role['Position'] === 'Opposite' ? 'selected' : '' ?>>Opposite</option>
+                    <option value="Setter" <?= $role['Position'] === 'Setter' ? 'selected' : '' ?>>Setter</option>
+                    <option value="Middle Blocker" <?= $role['Position'] === 'Middle Blocker' ? 'selected' : '' ?>>Middle Blocker</option>
+                    <option value="Libero" <?= $role['Position'] === 'Libero' ? 'selected' : '' ?>>Libero</option>
+                    <option value="Defensive Specialist" <?= $role['Position'] === 'Defensive Specialist' ? 'selected' : '' ?>>Defensive Specialist</option>
+                    <option value="Serving Specialist" <?= $role['Position'] === 'Serving Specialist' ? 'selected' : '' ?>>Serving Specialist</option>
+                </select>
                 <br>
                 <p>* This indicates that the field must be filled</p>
-                <button type="submit"> Add Player</button>
+                <button type="submit">Edit Player</button>
             </form>
         </div>
     </main>
