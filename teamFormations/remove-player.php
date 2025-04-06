@@ -18,7 +18,7 @@
     $result = mysqli_stmt_get_result($stmt);
     $team = mysqli_fetch_assoc($result);
 
-    if (!$role) {
+    if (!$team) {
         header("Location: show-details.php?id=$teamID&error=Player not found in current team.");
         exit;
     }
