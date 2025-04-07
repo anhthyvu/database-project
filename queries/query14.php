@@ -3,7 +3,69 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
+        SELECT 
+            ClubMember.CMN,
+            Person.FirstName, 
+            Person.LastName, 
+            FLOOR(DATEDIFF(CURDATE(), Person.DateOfBirth)/365) AS age, 
+            Person.PhoneNumber, 
+            Person.Email,
+            Location.name AS location_name
+
+        FROM Person, ClubMember, Location, Payment
+        WHERE
+            -- joins 
+            Person.PersonID = ClubMember.PersonID 
+            AND Location.LocationID = ClubMember.LocationID 
+            AND ClubMember.CMN = Payment.CMN 
+            -- check if they're active 
+            AND Payment.MembershipEndDate  >= CURDATE()
+            -- checks if they're all position
+            AND EXISTS (
+                SELECT 1 FROM Role r 
+                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
+                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Outside Hitter'
+            )
+            
+            AND EXISTS (
+                SELECT 1 FROM Role r 
+                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
+                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Opposite'
+            )
+            
+            AND EXISTS (
+                SELECT 1 FROM Role r 
+                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
+                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Setter'
+            )
+            
+            AND EXISTS (
+                SELECT 1 FROM Role r 
+                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
+                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Middle Blocker'
+            )
+            
+            AND EXISTS (
+                SELECT 1 FROM Role r 
+                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
+                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Libero'
+            )
+            
+            AND EXISTS (
+                SELECT 1 FROM Role r 
+                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
+                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Defensive Specialist'
+            )
+            
+            AND EXISTS (
+                SELECT 1 FROM Role r 
+                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
+                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Serving Specialist'
+            )
+        GROUP BY ClubMember.CMN
+        ORDER BY 
+            location_name ASC, 
+            ClubMember.CMN ASC
     ";
 
     // Execute the query
@@ -58,20 +120,26 @@
             <h2>Query 14</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <tr>
+                        <th>CMN</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Location Name</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <!-- 
-                                //Todo: display query dynamically based on the name used in the query
-                                example:
-                                <td><?= htmlspecialchars($row['Attribute1']) ?></td>
-                            -->
+                            <td><?= htmlspecialchars($row['CMN']) ?></td>
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['age']) ?></td>
+                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['Email']) ?></td>
+                            <td><?= htmlspecialchars($row['location_name']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
