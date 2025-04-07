@@ -103,10 +103,24 @@
                     <th>Phone #</th>
                     <th>Email</th>
                     <th>Location Name</th>
+                    <th>CMN</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Phone #</th>
+                    <th>Email</th>
+                    <th>Location Name</th>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
+                            <td><?= htmlspecialchars($row['CMN']) ?></td>
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['age']) ?></td>
+                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['Email']) ?></td>
+                            <td><?= htmlspecialchars($row['location_name']) ?></td>
                             <td><?= htmlspecialchars($row['CMN']) ?></td>
                             <td><?= htmlspecialchars($row['FirstName']) ?></td>
                             <td><?= htmlspecialchars($row['LastName']) ?></td>
