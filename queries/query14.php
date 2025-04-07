@@ -4,68 +4,31 @@
 
     $query = "
         SELECT 
-            ClubMember.CMN,
-            Person.FirstName, 
-            Person.LastName, 
-            FLOOR(DATEDIFF(CURDATE(), Person.DateOfBirth)/365) AS age, 
-            Person.PhoneNumber, 
-            Person.Email,
-            Location.name AS location_name
-
-        FROM Person, ClubMember, Location, Payment
-        WHERE
-            -- joins 
-            Person.PersonID = ClubMember.PersonID 
-            AND Location.LocationID = ClubMember.LocationID 
-            AND ClubMember.CMN = Payment.CMN 
-            -- check if they're active 
-            AND Payment.MembershipEndDate  >= CURDATE()
-            -- checks if they're all position
-            AND EXISTS (
-                SELECT 1 FROM Role r 
+            cm.CMN,
+            p.FirstName, 
+            p.LastName, 
+            FLOOR(DATEDIFF(CURDATE(), p.DateOfBirth)/365) AS age, 
+            p.PhoneNumber, 
+            p.Email,
+            l.Name AS location_name
+        FROM ClubMember cm
+        JOIN Person p ON cm.PersonID = p.PersonID
+        JOIN Location l ON cm.LocationID = l.LocationID
+        JOIN Payment pay ON cm.CMN = pay.CMN
+        WHERE 
+            pay.MembershipEndDate >= CURDATE()
+            AND FLOOR(DATEDIFF(CURDATE(), p.DateOfBirth)/365) <= 18
+            AND cm.CMN IN (
+                SELECT r.CMN
+                FROM Role r
                 JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
-                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Outside Hitter'
+                GROUP BY r.CMN
+                HAVING 
+                    COUNT(DISTINCT r.Position) = 7
             )
-            
-            AND EXISTS (
-                SELECT 1 FROM Role r 
-                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
-                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Opposite'
-            )
-            
-            AND EXISTS (
-                SELECT 1 FROM Role r 
-                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
-                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Setter'
-            )
-            
-            AND EXISTS (
-                SELECT 1 FROM Role r 
-                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
-                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Middle Blocker'
-            )
-            
-            AND EXISTS (
-                SELECT 1 FROM Role r 
-                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
-                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Libero'
-            )
-            
-            AND EXISTS (
-                SELECT 1 FROM Role r 
-                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
-                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Defensive Specialist'
-            )
-            
-            AND EXISTS (
-                SELECT 1 FROM Role r 
-                JOIN Session s ON r.TeamID = s.Team1ID OR r.TeamID = s.Team2ID
-                WHERE r.CMN = ClubMember.CMN AND r.Position = 'Serving Specialist'
-            )
-        GROUP BY ClubMember.CMN
         ORDER BY 
             location_name ASC, 
-            ClubMember.CMN ASC
+            cm.CMN ASC
     ";
 
     // Execute the query
@@ -117,7 +80,7 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 14</h2>
+            <h2>Query 14: Active Club Members Assigned to Every Role Across Formation Game Sessions</h2>
             <table class="data-table">
                 <thead>
                     <tr>
