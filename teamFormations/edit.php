@@ -43,6 +43,52 @@
                 throw new Exception("Error executing query: " . mysqli_error($conn));
             }
 
+            //Send email to the captain when the team is updated
+            $emailQuery = "
+                INSERT INTO Email (locationID, recipientID, Subject, Date, First100Chars) VALUES (?, ?, ?, ?, ?)
+            ";
+
+            // Set the email parameters
+            $subject = "Team Formation Update Confirmation";
+            $date = date("Y-m-d H:i:s");
+
+            // Write the body for the email according to the changes made
+            $updatedFields = [];
+            $updatedFields[] = "Team {$teamName} has been updated with the following changes:";
+            if ($teamName !== $team['TeamName']) {
+                $updatedFields[] = "Team Name updated to '{$teamName}. '";
+            }
+            if ($gender !== $team['Gender']) {
+                $updatedFields[] = "Gender updated to '{$gender}. '";
+            }
+            if ($locationID !== $team['LocationID']) {
+                $updatedFields[] = "Location ID updated to {$locationID}. ";
+            }
+            if ($captainID !== $team['Captain']) {
+                // Fetch the new captain's name
+                $captainQuery = "SELECT CONCAT(FirstName, ' ', LastName) AS CaptainName FROM Person WHERE PersonID = ?";
+                $captainStmt = mysqli_prepare($conn, $captainQuery);
+                mysqli_stmt_bind_param($captainStmt, 'i', $captainID);
+                mysqli_stmt_execute($captainStmt);
+                $captainResult = mysqli_stmt_get_result($captainStmt);
+                $captainRow = mysqli_fetch_assoc($captainResult);
+                $captainName = $captainRow['CaptainName'];
+                $updatedFields[] = "Captain updated to {$captainName}. ";
+            }
+
+            // Construct the email body
+            $first100Chars = implode(", ", $updatedFields);
+            if (strlen($first100Chars) > 100) {
+                $first100Chars = substr($first100Chars, 0, 97) . "...";
+            }
+
+            $emailStmt = mysqli_prepare($conn, $emailQuery);
+            mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $captainID, $subject, $date, $first100Chars);
+
+            if (!mysqli_stmt_execute($emailStmt)) {
+                throw new Exception("Failed to send email: " . mysqli_error($conn));
+            }
+
             mysqli_commit($conn);
 
             // Redirect with success parameter
@@ -71,26 +117,23 @@
             <li><a href="../familyMembers/index.php">Family Members</a></li>
             <li><a href="../personnels/index.php">Personnel</a></li>
             <li><a href="../locations/index.php">Locations</a></li>
-            <li><a href="index.php">Team Formation</a></li>
-            <li><a href="#">Events</a></li>
-
-            <!-- Email Logs Dropdown -->
-            <li class="dropdown">
-                <a href="#">Email Logs</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
-                </ul>
-            </li>
+            <li><a href="../teamFormations/index.php">Team Formation</a></li>
+            <li><a href="../emailLog/index.php">Email Logs</a></li>
 
             <!-- Reports Dropdown -->
             <li class="dropdown">
-                <a href="#">Reports</a>
+                <a href="#">Queries</a>
                 <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
+                    <li><a href="../queries/query9.php">Query 9</a></li>
+                    <li><a href="../queries/query10.php">Query 10</a></li>
+                    <li><a href="../queries/query11.php">Query 11</a></li>
+                    <li><a href="../queries/query12.php">Query 12</a></li>
+                    <li><a href="../queries/query13.php">Query 13</a></li>
+                    <li><a href="../queries/query14.php">Query 14</a></li>
+                    <li><a href="../queries/query15.php">Query 15</a></li>
+                    <li><a href="../queries/query16.php">Query 16</a></li>
+                    <li><a href="../queries/query17.php">Query 17</a></li>
+                    <li><a href="../queries/query18.php">Query 18</a></li>
                 </ul>
             </li>
         </ul>
