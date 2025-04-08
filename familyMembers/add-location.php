@@ -40,15 +40,6 @@
     <link rel="stylesheet" type="text/css" href="../css/navbar.css">
     <link rel="stylesheet" type="text/css" href="../css/footer.css">
     <link rel="stylesheet" type="text/css" href="../css/forms.css">
-    <script>
-        // Check for success parameter and display alert
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has('success')) {
-                alert('Family member added successfully!');
-            }
-        };
-    </script>
 </head>
 <body>
     <!-- Navbar Section -->
