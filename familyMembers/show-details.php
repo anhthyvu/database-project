@@ -44,13 +44,17 @@
         die("Query failed: " . mysqli_error($conn));
     }
 
-    //Check if the secondary family member exists
-    $secondaryData = [];
-    $hasSecondary = false;
-    while ($row = mysqli_fetch_assoc($secondaryResult)) {
-        $secondaryData[] = $row;
-        $hasSecondary = true;
+    //Check if there is a secondary family member
+    $query = "SELECT AlternativeFamilyID FROM FamilyMember WHERE PersonID = $Q8Id";
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
     }
+
+    $row = mysqli_fetch_assoc($result);
+    $hasAlternative = !is_null($row['AlternativeFamilyID']);
+    
 
     //Fetch the club members details
     $membersQuery = "
@@ -172,9 +176,10 @@
         <!-- Secondary Family Member Details -->
         <div class="list-container">
             <h2>Secondary Family Member</h2>
-            <?php if (!$hasSecondary): ?>
-                <button class="add-secondary-btn add-btn" onclick="window.location.href='add-secondary.php'">Add Secondary Family Member</button>
+            <?php if (!$hasAlternative): ?>
+                <button class="add-secondary-btn add-btn" onclick="window.location.href='add-secondary.php?id=<?= urlencode($Q8Id) ?>'">Add Secondary Family Member</button>
             <?php endif; ?>
+
             <table class="data-table">
             <thead>
                 <tr>
