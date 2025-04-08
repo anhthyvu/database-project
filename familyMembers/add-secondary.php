@@ -20,7 +20,7 @@
                 WHERE PersonID = ?
             ";
             $updateStmt = mysqli_prepare($conn, $updateFamilyMemberQuery);
-            mysqli_stmt_bind_param($updateStmt, 'ii', $personID, $secondaryID);
+            mysqli_stmt_bind_param($updateStmt, 'ii', $secondaryID, $personID);
 
             if (!mysqli_stmt_execute($updateStmt)) {
                 throw new Exception("Failed to update FamilyMember entry: " . mysqli_error($conn));
@@ -30,7 +30,7 @@
             mysqli_commit($conn);
 
             // Redirect with success parameter
-            header("Location: index.php?success=1");
+            header("Location: show-details.php?id=" . $personID . "&success=1");
             exit;
             
         } catch (Exception $e) {
