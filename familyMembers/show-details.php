@@ -44,6 +44,14 @@
         die("Query failed: " . mysqli_error($conn));
     }
 
+    //Check if the secondary family member exists
+    $secondaryData = [];
+    $hasSecondary = false;
+    while ($row = mysqli_fetch_assoc($secondaryResult)) {
+        $secondaryData[] = $row;
+        $hasSecondary = true;
+    }
+
     //Fetch the club members details
     $membersQuery = "
         SELECT
@@ -135,7 +143,7 @@
         <!-- Location Details -->
         <div class="list-container">
             <h2>Locations</h2>
-            <button class="add-location-btn add-btn" onclick="window.location.href='add-location.php'">Add New Location</button>
+            <button class="add-location-btn add-btn" onclick="window.location.href='add-location.php?id=<?= urlencode($Q8Id) ?>'">Add New Location</button>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -164,31 +172,32 @@
         <!-- Secondary Family Member Details -->
         <div class="list-container">
             <h2>Secondary Family Member</h2>
-            <button class="add-secondary-btn add-btn" onclick="window.location.href='add-secondary.php'">Add Secondary Family Member</button>
+            <?php if (!$hasSecondary): ?>
+                <button class="add-secondary-btn add-btn" onclick="window.location.href='add-secondary.php'">Add Secondary Family Member</button>
+            <?php endif; ?>
             <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Phone Number</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = mysqli_fetch_assoc($secondaryResult)): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($row['SecondaryFirstName']) ?></td>
-                            <td><?= htmlspecialchars($row['SecondaryLastName']) ?></td>
-                            <td><?= htmlspecialchars($row['SecondaryPhoneNumber']) ?></td>
-                        </tr>
-                    <?php endwhile; ?>
-                </tbody>
+            <thead>
+                <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row = mysqli_fetch_assoc($secondaryResult)): ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['SecondaryFirstName']) ?></td>
+                    <td><?= htmlspecialchars($row['SecondaryLastName']) ?></td>
+                    <td><?= htmlspecialchars($row['SecondaryPhoneNumber']) ?></td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
             </table>
         </div>
 
         <!-- Club Members Details -->
         <div class="list-container">
             <h2>Club Members</h2>
-            <button class="add-club-member-btn add-btn" onclick="window.location.href='add-club-member.php'">Add Club Member</button>
             <table class="data-table">
                 <thead>
                     <tr>

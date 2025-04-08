@@ -16,7 +16,7 @@
                 INSERT INTO RegisteredAt (FamilyID, LocationID, DateRegistered) VALUES (?, ?, ?)
             ";
             $stmt = mysqli_prepare($conn, $registeredAtQuery);
-            mysqli_stmt_bind_param($stmt, 'iis', $familyID, $locationID, $dateRegistered);
+            mysqli_stmt_bind_param($stmt, 'iis', $personID, $locationID, $dateRegistered);
 
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to add RegisteredAt entry: " . mysqli_error($conn));
@@ -25,7 +25,7 @@
             mysqli_commit($conn);
 
             // Redirect with success parameter
-            header("Location: index.php?success=1");
+            header("Location: show-details.php?id=" . $personID . "&success=1");
             exit;
             
         } catch (Exception $e) {
@@ -83,7 +83,7 @@
                 <div class="error" style="color: red; font-weight: bold; margin-top: 20px;">Error: <?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <form action="add.php" method="POST">
+            <form action="add-location.php?id=<?= $personID ?>" method="POST">
                 <label for="locationID">LocationID *:</label>
                 <input type="text" name="locationID" id="locationID" required
                     value="<?= isset($_POST['locationID']) ? htmlspecialchars($_POST['locationID']) : '' ?>"
