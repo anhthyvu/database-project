@@ -5,40 +5,6 @@
     
     $Q8Id = isset($_GET['id']) ? $_GET['id'] : 0;
 
-    // $query = "
-        // SELECT
-        //     secondary_person.FirstName AS SecondaryFirstName,
-        //     secondary_person.LastName AS SecondaryLastName,
-        //     secondary_person.PhoneNumber AS SecondaryPhoneNumber,
-        //     location.Name AS LocationName,
-        //     cm.CMN AS ClubMembershipNumber,
-        //     person.FirstName AS ClubMemberFirstName,
-        //     person.LastName AS ClubMemberLastName,
-        //     person.DateOfBirth,
-        //     person.SSN,
-        //     person.MedicareNumber,
-        //     person.PhoneNumber AS ClubMemberPhoneNumber,
-        //     person.Address,
-        //     person.City,
-        //     person.Province,
-        //     person.PostalCode,
-        //     cm.Relationship AS RelationshipToSecondaryFamilyMember
-
-        // FROM FamilyMember AS fm
-        // LEFT JOIN FamilyMember AS secondary_fm
-        //     ON fm.AlternativeFamilyID = secondary_fm.PersonID
-        // LEFT JOIN Person AS secondary_person
-        //     ON secondary_fm.PersonID = secondary_person.PersonID
-        // JOIN ClubMember AS cm
-        //     ON cm.PrimaryFamilyID = fm.PersonID
-        // JOIN Person AS person
-        //     ON cm.PersonID = person.PersonID
-        // JOIN Location AS location
-        //     ON cm.LocationID = location.LocationID
-        // WHERE fm.PersonID = $Q8Id
-
-    // ";
-
     //Fetch the location details
     $locationQuery = "
         SELECT
