@@ -70,7 +70,7 @@ ORDER BY CM.CMN ASC;
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 10</h2>
+            <h2>Query 10: List of Active Club Members</h2>
             <table class="data-table">
                 <thead>
                     <tr>
