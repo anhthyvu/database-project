@@ -3,7 +3,7 @@
     require_once '../database.php';
 
     $query = "
-       SELECT 
+    SELECT 
     CM.CMN AS ClubMembershipNumber,
     P.FirstName,
     P.LastName
@@ -18,7 +18,8 @@ WHERE CM.CMN IN (
 )
 AND TIMESTAMPDIFF(YEAR, RA.DateRegistered, CURDATE()) <= 3
 ORDER BY CM.CMN ASC;
-    ";
+
+";
 
     // Execute the query
     $result = mysqli_query($conn, $query);
@@ -77,6 +78,7 @@ ORDER BY CM.CMN ASC;
                         <th>First Name</th>
                         <th>Last Name</th>
                     </tr>
+                
                 </thead>
                 <tbody>
                     <?php while ($row = mysqli_fetch_assoc($result)) : ?>
